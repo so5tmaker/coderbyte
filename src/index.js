@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import ReactDOM from 'react-dom/client';
 // import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { useEffect } from 'react';
 
 const style = {
   table: {
@@ -89,9 +90,52 @@ function Application(props) {
     </section>)
 }
 
+const App1 = (props) => {
+  const [counter, setCounter] = useState();
+  useEffect(() => {
+    console.log('Hello');
+    // setCounter(1);
+  }, [props.visible]);
+  return <div>{"" + counter}</div>
+}
+
+const App2 = () => {
+  const [counter] = useReducer((s = 3) => s, 1);
+
+  console.log('useReducer', counter);
+
+  return <div />
+}
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'increment': {
+      return state + 1;
+    }
+    case 'double': {
+      return state * 2;
+    }
+    default: {
+      return state;
+    }
+  }
+}
+const MyComponent = () => {
+  const [counter, dispatch] = useReducer(reducer, 0);
+  const fire = () => {
+    ['increment', 'double', 'reset', 'increment', 'double'].forEach((type) => dispatch({ type }));
+  }
+  return <button onClick={fire}>{counter}</button>;
+}
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Application />
+  <>
+    <Application />
+    <App1 visible={true} />
+    <App2 />
+    <MyComponent />
+  </>
+
   // <React.StrictMode>
   //   <App />
   // </React.StrictMode>
